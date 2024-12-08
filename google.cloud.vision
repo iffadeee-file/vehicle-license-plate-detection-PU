@@ -1,0 +1,59 @@
+pip install google-generative-ai
+!pip install google-cloud-vision
+
+from google.colab import files
+uploaded = files.upload()
+
+import os
+os.environ["API_KEY"] = "yOUR_API"
+
+import os
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "Your_credential.json"
+
+from google.cloud import vision
+import io
+import json
+from datetime import datetime
+
+# Inisialisasi Vision API client
+client = vision.ImageAnnotatorClient()
+
+def detect_plate_number(image_path):
+    # Membaca file gambar
+    with io.open(image_path, 'rb') as image_file:
+        content = image_file.read()
+
+    image = vision.Image(content=content)
+
+    # Menggunakan fitur OCR untuk mendeteksi teks
+    response = client.text_detection(image=image)
+    texts = response.text_annotations
+
+    # Ekstraksi plat nomor (contoh format sederhana)
+    plat_no = texts[0].description if texts else "Not Found"
+
+    # Contoh metadata kendaraan (diatur manual atau dari API lain)
+    vehicle_info = {
+        "vehicle": "car",
+        "vehicle_type": "sedan",
+        "color": "red",
+    }
+
+    # Waktu gate terbuka
+    gate_open = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    # Hasil JSON
+    result = {
+        "plat_no": plat_no.strip(),
+        "vehicle": vehicle_info["vehicle"],
+        "vehicle_type": vehicle_info["vehicle_type"],
+        "color": vehicle_info["color"],
+        "gate_open": gate_open,
+        "gate_closed": "N/A",
+    }
+    return json.dumps(result, indent=4)
+
+# Contoh penggunaan
+image_path = "plat.jpeg"  # Ganti dengan path gambar Anda
+output = detect_plate_number(image_path)
+print(output)
