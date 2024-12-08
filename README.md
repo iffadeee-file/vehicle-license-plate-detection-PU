@@ -27,7 +27,7 @@ Before running this project, make sure you set up Google Cloud Vision API creden
      ```
 
 4. **API Credentials**:
-   - After getting the API credentials JSON file (e.g., `vision-api-project-444115-7ced481e305f.json`), save it in the project directory.
+   - After getting the API credentials JSON file (e.g., `YOUR_JSON.json`), save it in the project directory.
 
 ## Installation and Usage
 
